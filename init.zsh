@@ -8,6 +8,10 @@ KITTY_CONFIG="$HOME/.config/kitty/kitty.conf"
 
 # Step 1: Link .zshrc_extra
 DOTFILES_ZSHRC_EXTRA="$DOTFILES_DIR/.zshrc_extra"
+if [[ -f "$ZSHRC_EXTRA" && ! -L "$ZSHRC_EXTRA" ]]; then
+    echo "Renaming existing .zshrc_extra to .zshrc_extra+pre-init..."
+    mv "$ZSHRC_EXTRA" "$ZSHRC_EXTRA+pre-init"
+fi
 if [[ ! -L "$ZSHRC_EXTRA" ]]; then
     echo "Creating symbolic link for .zshrc_extra..."
     ln -s "$DOTFILES_ZSHRC_EXTRA" "$ZSHRC_EXTRA"
@@ -23,6 +27,10 @@ fi
 
 # Step 2: Link init.lua for Neovim
 DOTFILES_NVIM_INIT="$DOTFILES_DIR/init.lua"
+if [[ -f "$NVIM_CONFIG" && ! -L "$NVIM_CONFIG" ]]; then
+    echo "Renaming existing init.lua to init.lua+pre-init..."
+    mv "$NVIM_CONFIG" "$NVIM_CONFIG+pre-init"
+fi
 if [[ ! -L "$NVIM_CONFIG" ]]; then
     echo "Creating symbolic link for init.lua in Neovim..."
     mkdir -p "$(dirname "$NVIM_CONFIG")"  # Ensure the parent directory exists
@@ -33,6 +41,10 @@ fi
 
 # Step 3: Link kitty.conf for Kitty
 DOTFILES_KITTY_CONF="$DOTFILES_DIR/kitty.conf"
+if [[ -f "$KITTY_CONFIG" && ! -L "$KITTY_CONFIG" ]]; then
+    echo "Renaming existing kitty.conf to kitty.conf+pre-init..."
+    mv "$KITTY_CONFIG" "$KITTY_CONFIG+pre-init"
+fi
 if [[ ! -L "$KITTY_CONFIG" ]]; then
     echo "Creating symbolic link for kitty.conf in Kitty..."
     mkdir -p "$(dirname "$KITTY_CONFIG")"  # Ensure the parent directory exists
