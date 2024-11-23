@@ -9,6 +9,7 @@ Todo
 
 - [ ] Add installation step 
   - [ ] oh-my-zsh
-  - [ ] auto suggestions 
+  - [ ] auto suggestions
+  - [ ] syntax hightlight
   - [ ] kitty 
   - [ ] neo-vim
