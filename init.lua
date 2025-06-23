@@ -115,3 +115,25 @@ vim.keymap.set('n', '<leader>w', ':w<CR>', { noremap = true, silent = true }) --
 vim.keymap.set('n', '<leader>d', 'yyp', { noremap = true, silent = true })    -- Duplicate line
 vim.keymap.set('n', '<leader>c', require('Comment.api').toggle.linewise.current, { noremap = true, silent = true }) -- Toggle comment
 vim.keymap.set('n', '<leader>D', duplicate_and_comment, { noremap = true, silent = true }) -- Duplicate and comment
+
+if vim.g.vscode then
+    -- Folding keymaps using VSCode commands
+    vim.keymap.set('n', 'zM', function() vim.fn.VSCodeNotify('editor.foldAll') end, { silent = true })
+    vim.keymap.set('n', 'zR', function() vim.fn.VSCodeNotify('editor.unfoldAll') end, { silent = true })
+    vim.keymap.set('n', 'zc', function() vim.fn.VSCodeNotify('editor.fold') end, { silent = true })
+    vim.keymap.set('n', 'zC', function() vim.fn.VSCodeNotify('editor.foldRecursively') end, { silent = true })
+    vim.keymap.set('n', 'zo', function() vim.fn.VSCodeNotify('editor.unfold') end, { silent = true })
+    vim.keymap.set('n', 'zO', function() vim.fn.VSCodeNotify('editor.unfoldRecursively') end, { silent = true })
+    vim.keymap.set('n', 'za', function() vim.fn.VSCodeNotify('editor.toggleFold') end, { silent = true })
+
+    -- Custom cursor movement: Avoid opening folds with 'j' and 'k'
+    local function move_cursor_no_fold(direction)
+        vim.fn.VSCodeNotify('cursorMove', { to = direction, by = 'wrappedLine', value = 1 })
+        return ''
+    end
+
+    vim.keymap.set('n', 'j', function() return move_cursor_no_fold('down') end, { expr = true, silent = true })
+    vim.keymap.set('n', 'k', function() return move_cursor_no_fold('up') end, { expr = true, silent = true })
+end
+
+
