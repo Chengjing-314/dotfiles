@@ -83,3 +83,5 @@ Change themes
 ```bash
 kitten themes
 ```
+
+Download Nerd Fonts `MesloLGS NF`
