@@ -83,26 +83,47 @@ if packer_bootstrap then return end
 -- =========================================
 -- Catppuccin Theme
 -- =========================================
-require("catppuccin").setup({ 
-  flavour = "mocha", 
-  integrations = { 
-    treesitter = true, 
-    native_lsp = { enabled = true } 
-  } 
+require("catppuccin").setup({
+  flavour = "mocha",
+  highlight_overrides = {
+    mocha = function(c)
+      return {
+        ["@variable.parameter"] = { fg = c.maroon, style = {} },
+      }
+    end,
+  },
+  integrations = {
+    treesitter = true,
+    native_lsp = {
+      enabled = true,
+      underlines = {
+        errors = { "underline" },
+        hints = { "underline" },
+        warnings = { "underline" },
+        information = { "underline" },
+      },
+    },
+    semantic_tokens = true,
+  },
 })
 vim.cmd("colorscheme catppuccin")
 
+-- Force parameter highlighting
+vim.api.nvim_set_hl(0, "@variable.parameter", { fg = "#eba0ac" })
+vim.api.nvim_set_hl(0, "@variable.parameter.python", { fg = "#eba0ac" })
+vim.api.nvim_set_hl(0, "@lsp.type.parameter", { fg = "#eba0ac" })
+vim.api.nvim_set_hl(0, "@lsp.type.parameter.python", { fg = "#eba0ac" })
+
 -- =========================================
--- Treesitter
+-- Treesitter (nvim 0.11+ built-in)
 -- =========================================
-local ok_ts, ts_configs = pcall(require, "nvim-treesitter.configs")
-if ok_ts then
-  ts_configs.setup({
-    ensure_installed = { "python", "lua", "vim", "vimdoc" },
-    highlight = { enable = true, additional_vim_regex_highlighting = false },
-    indent = { enable = true },
-  })
-end
+-- Parsers: install via :TSInstall python lua vim vimdoc bash json yaml toml
+-- Highlighting is automatic once parsers are installed.
+vim.api.nvim_create_autocmd("FileType", {
+  callback = function()
+    pcall(vim.treesitter.start)
+  end,
+})
 
 -- =========================================
 -- Mason Setup
@@ -114,20 +135,22 @@ require("mason-lspconfig").setup({
 })
 
 -- =========================================
--- LSP Configuration (nvim-lspconfig)
+-- LSP Configuration (nvim 0.11+ style)
 -- =========================================
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 pcall(function()
   capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 end)
 
-local lspconfig = require("lspconfig")
-
 -- 1. Setup Pyright (Type Checking)
-lspconfig.pyright.setup({
+local conda_prefix = os.getenv("CONDA_PREFIX")
+local python_path = conda_prefix and (conda_prefix .. "/bin/python") or vim.fn.exepath("python3")
+
+vim.lsp.config("pyright", {
   capabilities = capabilities,
   settings = {
     python = {
+      pythonPath = python_path,
       analysis = {
         typeCheckingMode = "basic",
         autoSearchPaths = true,
@@ -136,11 +159,13 @@ lspconfig.pyright.setup({
     },
   },
 })
+vim.lsp.enable("pyright")
 
 -- 2. Setup Ruff (Linting & Formatting)
-lspconfig.ruff.setup({
+vim.lsp.config("ruff", {
   capabilities = capabilities,
 })
+vim.lsp.enable("ruff")
 
 -- =========================================
 -- Diagnostics (Icons & Pop-ups)
@@ -209,4 +234,4 @@ vim.keymap.set("n", "<leader>D", function()
   vim.api.nvim_buf_set_lines(0, row, row, false, { line })
   vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
   require("Comment.api").toggle.linewise.current()
-end))
+end)
