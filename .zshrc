@@ -26,9 +26,9 @@ if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
     if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "$HOME/miniconda3/etc/profile.d/conda.sh"
+# . "$HOME/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
     else
-        export PATH="$HOME/miniconda3/bin:$PATH"
+# export PATH="$HOME/miniconda3/bin:$PATH"  # commented out by conda initialize
     fi
 fi
 unset __conda_setup
@@ -51,3 +51,34 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 ZLE_RPROMPT_INDENT=0
 alias ls=lsd
 alias cooler='sudo systemctl stop coolercontrold;sudo systemctl start coolercontrold'
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/chengjingyuan/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/chengjingyuan/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/chengjingyuan/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/chengjingyuan/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+
+# Added by Windsurf
+export PATH="/Users/chengjingyuan/.codeium/windsurf/bin:$PATH"
+
+# Added by Windsurf
+export PATH="/Users/chengjingyuan/.codeium/windsurf/bin:$PATH"
+
+# Added by Windsurf
+export PATH="/Users/chengjingyuan/.codeium/windsurf/bin:$PATH"
+
+# Added by Windsurf
+export PATH="/Users/chengjingyuan/.codeium/windsurf/bin:$PATH"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# OpenClaw Completion
+source "/Users/chengjingyuan/.openclaw/completions/openclaw.zsh"
