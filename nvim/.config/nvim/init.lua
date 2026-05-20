@@ -44,7 +44,7 @@ require('packer').startup(function(use)
 end)
 
 require('catppuccin').setup({
-    flavour = "macchiato" -- latte, frappe, macchiato, mocha
+    flavour = "latte" -- light, professional work theme
 })
 
 vim.cmd('colorscheme catppuccin')
