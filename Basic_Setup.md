@@ -98,7 +98,7 @@ Stow kitty config and set theme:
 
 ```bash
 cd ~/dotfiles && stow kitty
-kitten themes --reload-in=all Catppuccin-Latte
+kitten themes --reload-in=all Catppuccin-Frappe
 ```
 
 #### Stow all at once
