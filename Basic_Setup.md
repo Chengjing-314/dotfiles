@@ -6,17 +6,24 @@
 sudo apt update && sudo apt upgrade -y
 ```
 
-#### Install GNU Stow
+#### Install GNU Stow & common tools
 
 ```bash
-sudo apt install stow -y
+sudo apt install stow lsd xclip -y
 ```
 
 #### Clone dotfiles
 
 ```bash
-git clone <your-repo-url> ~/dotfiles
+git clone git@github.com:Chengjing-314/dotfiles.git ~/dotfiles
 cd ~/dotfiles
+git checkout ubuntu_24_04work
+```
+
+#### Set up directories
+
+```bash
+mkdir -p ~/bin ~/.local/bin
 ```
 
 #### Install Zsh & [Oh My Zsh](https://ohmyz.sh/#install)
@@ -69,12 +76,6 @@ git clone --depth 1 https://github.com/wbthomason/packer.nvim\
 
 Open up neovim and run `:PackerSync` to install necessary packages
 
-Enable neovim to use system clipboard
-
-```bash
-sudo apt install xclip
-```
-
 #### Install [Kitty](https://sw.kovidgoyal.net/kitty/binary/)
 
 ```bash
@@ -87,19 +88,18 @@ sed -i "s|Exec=kitty|Exec=$(readlink -f ~)/.local/kitty.app/bin/kitty|g" ~/.loca
 echo 'kitty.desktop' > ~/.config/xdg-terminals.list
 ```
 
-Stow kitty config:
+Install JetBrains Mono (system font used by this branch):
+
+```bash
+sudo apt install fonts-jetbrains-mono -y
+```
+
+Stow kitty config and set theme:
 
 ```bash
 cd ~/dotfiles && stow kitty
+kitten themes --reload-in=all Catppuccin-Latte
 ```
-
-Change themes:
-
-```bash
-kitten themes
-```
-
-Download Nerd Fonts `MesloLGS NF`
 
 #### Stow all at once
 
