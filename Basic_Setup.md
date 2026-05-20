@@ -76,7 +76,47 @@ git clone --depth 1 https://github.com/wbthomason/packer.nvim\
  ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 ```
 
-Open up neovim and run `:PackerSync` to install necessary packages
+Install `tree-sitter` CLI (required by `nvim-treesitter` v1.0+ / `main` branch
+to clone and compile parsers). It needs Node.js, so install nvm + Node first:
+
+```bash
+# nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
+\. "$HOME/.nvm/nvm.sh"
+
+# Node.js (LTS or current)
+nvm install 24
+
+# tree-sitter CLI
+npm install -g tree-sitter-cli
+tree-sitter --version   # sanity check
+
+# Symlink into ~/.local/bin so Neovim can find it regardless of whether
+# nvm has been sourced in the current shell (e.g. GUI-launched nvim).
+mkdir -p ~/.local/bin
+ln -sf "$(which tree-sitter)" ~/.local/bin/tree-sitter
+```
+
+A C compiler is also required to build parsers (`build-essential` provides `gcc`):
+
+```bash
+sudo apt install build-essential -y
+```
+
+Open up neovim and run `:PackerSync` to install necessary packages, then
+restart neovim and run `:TSUpdate` to download and compile all configured
+tree-sitter parsers:
+
+```vim
+:PackerSync
+" restart nvim, then:
+:TSUpdate
+```
+
+Parsers are also installed automatically on launch via
+`require('nvim-treesitter').install({...})` in `init.lua`, but `:TSUpdate`
+forces a synchronous-ish refresh and is the canonical way to (re)install
+everything after a config change.
 
 #### Install [Kitty](https://sw.kovidgoyal.net/kitty/binary/)
 

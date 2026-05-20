@@ -19,7 +19,12 @@ vim.opt.syntax = "on"            -- Syntax highlighting
 require('packer').startup(function(use)
     -- Plugin Manager
     use 'wbthomason/packer.nvim'
-    use 'nvim-treesitter/nvim-treesitter'
+    use {
+        'nvim-treesitter/nvim-treesitter',
+        run = function()
+            require('nvim-treesitter').update()
+        end,
+    }
     use { "catppuccin/nvim", as = "catppuccin" }
 
     -- Comment.nvim
@@ -49,23 +54,36 @@ require('catppuccin').setup({
 
 vim.cmd('colorscheme catppuccin')
 
-require'nvim-treesitter.configs'.setup {
-    ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "python" },
-    sync_install = false,
-    auto_install = true,
-    ignore_install = { "javascript" },
-    highlight = {
-        enable = true,
-        disable = function(lang, buf)
-            local max_filesize = 100 * 1024 -- 100 KB
-            local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-            if ok and stats and stats.size > max_filesize then
-                return true
-            end
-        end,
-        additional_vim_regex_highlighting = false,
-    },
-}
+-- nvim-treesitter (main branch, v1.0+) — no more setup{}; install parsers
+-- and enable highlighting via FileType autocmd.
+local ok_ts, nts = pcall(require, 'nvim-treesitter')
+if ok_ts then
+    nts.install({
+        "c", "lua", "vim", "vimdoc", "query",
+        "markdown", "markdown_inline", "python",
+    })
+end
+
+vim.api.nvim_create_autocmd('FileType', {
+    callback = function(args)
+        local buf = args.buf
+        local ft = vim.bo[buf].filetype
+        if ft == 'javascript' then return end -- previously in ignore_install
+
+        -- Skip very large files (previously highlight.disable)
+        local max_filesize = 100 * 1024 -- 100 KB
+        local fname = vim.api.nvim_buf_get_name(buf)
+        local stat_ok, stats = pcall(vim.loop.fs_stat, fname)
+        if stat_ok and stats and stats.size > max_filesize then
+            return
+        end
+
+        local lang = vim.treesitter.language.get_lang(ft) or ft
+        if pcall(vim.treesitter.start, buf, lang) then
+            vim.bo[buf].syntax = 'off' -- disable additional vim regex highlighting
+        end
+    end,
+})
 
 -- Custom function: Duplicate and comment
 local function duplicate_and_comment()
