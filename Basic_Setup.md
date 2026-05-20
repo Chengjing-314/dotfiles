@@ -6,17 +6,24 @@
 sudo apt update && sudo apt upgrade -y
 ```
 
-#### Install GNU Stow
+#### Install GNU Stow & common tools
 
 ```bash
-sudo apt install stow -y
+sudo apt install stow lsd xclip -y
 ```
 
 #### Clone dotfiles
 
 ```bash
-git clone <your-repo-url> ~/dotfiles
+git clone git@github.com:Chengjing-314/dotfiles.git ~/dotfiles
 cd ~/dotfiles
+git checkout ubuntu_24_04
+```
+
+#### Set up directories
+
+```bash
+mkdir -p ~/bin ~/.local/bin
 ```
 
 #### Install Zsh & [Oh My Zsh](https://ohmyz.sh/#install)
@@ -69,12 +76,6 @@ git clone --depth 1 https://github.com/wbthomason/packer.nvim\
 
 Open up neovim and run `:PackerSync` to install necessary packages
 
-Enable neovim to use system clipboard
-
-```bash
-sudo apt install xclip
-```
-
 #### Install [Kitty](https://sw.kovidgoyal.net/kitty/binary/)
 
 ```bash
@@ -93,13 +94,24 @@ Stow kitty config:
 cd ~/dotfiles && stow kitty
 ```
 
-Change themes:
+#### Install MesloLGS NF (Nerd Font)
+
+```bash
+mkdir -p ~/.local/share/fonts
+cd ~/.local/share/fonts
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Meslo.tar.xz
+tar -xf Meslo.tar.xz
+rm Meslo.tar.xz
+fc-cache -fv
+```
+
+#### Set Kitty theme
 
 ```bash
 kitten themes
 ```
 
-Download Nerd Fonts `MesloLGS NF`
+Select `Mayukai` (or your preferred theme).
 
 #### Stow all at once
 

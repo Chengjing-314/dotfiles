@@ -5,16 +5,12 @@ wget https://github.com/TheAssassin/AppImageLauncher/releases/download/v2.2.0/ap
 sudo dpkg -i /tmp/appimagelauncher.deb
 ```
 
-create symlink to start from command line 
-
+Create symlinks to start from command line (ensure `~/bin` exists):
 
 ```bash
+mkdir -p ~/bin
 ln -s ~/Applications/clash ~/bin/clash
 ln -s ~/Applications/obsidian ~/bin/obsidian
 ```
 
-note that the following should be in `~/.zshrc`
-
-```bash
-export PATH="$HOME/bin:$PATH"
-```
+`~/bin` is already on PATH via `.zshrc`.
