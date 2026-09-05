@@ -143,6 +143,45 @@ cd ~/dotfiles && stow kitty
 kitten themes --reload-in=all Catppuccin-Frappe
 ```
 
+#### Install [fzf](https://github.com/junegunn/fzf) (fuzzy finder)
+
+The `.zshrc` block is guarded, so this step is optional — but without it
+`ctrl+r` / `ctrl+t` / `alt+c` do nothing.
+
+The apt package is old (22.04 ships 0.29.0, 24.04 ships 0.44.1). The `.zshrc`
+handles both, but Homebrew gets you a current build:
+
+```bash
+brew install fzf fd bat        # preferred
+# or, distro package:
+sudo apt install fzf fd-find bat -y
+```
+
+`fd` and `bat` are optional — they add .gitignore-aware file search and syntax-
+highlighted previews. The config detects them and falls back cleanly if absent.
+On apt they install as `fdfind` / `batcat`, so symlink them onto the expected
+names:
+
+```bash
+mkdir -p ~/.local/bin
+ln -sf "$(which fdfind)" ~/.local/bin/fd
+ln -sf "$(which batcat)" ~/.local/bin/bat
+```
+
+#### Install [fzf-tab](https://github.com/Aloxaf/fzf-tab) (fuzzy TAB completion)
+
+Makes TAB open an fzf picker over completion candidates. Optional — `.zshrc`
+only adds it to `plugins` if this directory exists.
+
+```bash
+git clone --depth 1 https://github.com/Aloxaf/fzf-tab \
+  "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fzf-tab"
+```
+
+Note: fzf-tab *filters* the candidates zsh already generated — it does not make
+zsh generate more. So type the fuzzy string **inside the picker after TAB**, not
+on the command line before it.
+
 #### Stow all at once
 
 ```bash
